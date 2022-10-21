@@ -6,6 +6,7 @@ package dev.JonKramme.ipuniinfo.model;
 
 import javax.persistence.*;
 import java.util.Objects;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name="tbl_IpInfoLog")
@@ -13,6 +14,8 @@ public class IpInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
+    //@Temporal(TemporalType.TIMESTAMP) //Only needed for Date or Calender
+    LocalDateTime accessDate;
     String ip;
     String city;
     String region;
@@ -24,10 +27,12 @@ public class IpInfo {
     String readme;
 
     public IpInfo() {
+        this.accessDate = LocalDateTime.now();
     }
 
     public IpInfo(Long id, String ip, String city, String region, String country, String loc, String org, String postal, String timezone, String readme) {
         this.id = id;
+        this.accessDate = LocalDateTime.now();
         this.ip = ip;
         this.city = city;
         this.region = region;
