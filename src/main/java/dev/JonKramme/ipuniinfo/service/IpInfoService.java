@@ -1,5 +1,6 @@
 package dev.JonKramme.ipuniinfo.service;
 
+import com.google.common.net.InetAddresses;
 import dev.JonKramme.ipuniinfo.model.IpInfo;
 import dev.JonKramme.ipuniinfo.repository.IpInfoRepository;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,8 @@ public class IpInfoService {
 
 
     private boolean validate(String ipv4Address) {
-        //TODO: IPv4 Validation Code here
-        boolean valid = true; //Always true to test output
-        if (valid) {
-            return true;
-        } else {
-            return false;
-        }
+        // IPv4 Validation using Guava
+        return InetAddresses.isInetAddress(ipv4Address);
     }
     public IpInfo request(String ipv4Address) {
         if (!validate(ipv4Address)) {
