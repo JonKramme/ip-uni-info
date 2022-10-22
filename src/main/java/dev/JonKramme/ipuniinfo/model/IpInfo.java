@@ -1,8 +1,6 @@
 package dev.JonKramme.ipuniinfo.model;
 
-// Record to possibly save the JSON Information given by the IP API at https://ipinfo.io/{ip}/geo
-
-
+// Class to save and return the JSON Information given by the IP API at https://ipinfo.io/{ip}/geo
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
