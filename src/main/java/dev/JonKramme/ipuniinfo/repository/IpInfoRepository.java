@@ -1,10 +1,10 @@
 package dev.JonKramme.ipuniinfo.repository;
 
-import dev.JonKramme.ipuniinfo.model.IpInfo;
+import dev.JonKramme.ipuniinfo.model.IpInfoDTO;
+import dev.JonKramme.ipuniinfo.model.IpInfoDatabaseDTO;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface IpInfoRepository extends MongoRepository<IpInfo,Long> {
+public interface IpInfoRepository extends MongoRepository<IpInfoDatabaseDTO,String> {
 }

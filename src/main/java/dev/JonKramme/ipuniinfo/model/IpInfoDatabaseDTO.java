@@ -1,41 +1,45 @@
 package dev.JonKramme.ipuniinfo.model;
 
-// Class to save and return the JSON Information given by the IP API at https://ipinfo.io/{ip}/geo
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.Objects;
 import java.time.LocalDateTime;
-@Document("ipInfo")
-public class IpInfo {
-    String accessDate;
-    String ip;
-    String city;
-    String region;
-    String country;
-    String loc;
-    String org;
-    String postal;
-    String timezone;
-    String readme;
+import java.util.Objects;
+@Document("IpInfoLog")
+public class IpInfoDatabaseDTO {
+    @MongoId
+    private String id;
+    private String accessDate;
+    private String ip;
+    private String city;
+    private String region;
+    private String country;
+    private String loc;
+    private String org;
+    private String postal;
+    private String timezone;
+    private String readme;
 
-    public IpInfo() {
+    public IpInfoDatabaseDTO() {
         this.accessDate = LocalDateTime.now().toString();
     }
 
-    public IpInfo( String ip, String city, String region, String country, String loc, String org, String postal, String timezone, String readme) {
+    public IpInfoDatabaseDTO(IpInfoDTO IpInfoEntity) {
         super();
-        this.ip = ip;
-        this.city = city;
-        this.region = region;
-        this.country = country;
-        this.loc = loc;
-        this.org = org;
-        this.postal = postal;
-        this.timezone = timezone;
-        this.readme = readme;
+        this.ip = IpInfoEntity.ip();
+        this.city = IpInfoEntity.city();
+        this.region = IpInfoEntity.region();
+        this.country = IpInfoEntity.country();
+        this.loc = IpInfoEntity.loc();
+        this.org = IpInfoEntity.org();
+        this.postal = IpInfoEntity.postal();
+        this.timezone = IpInfoEntity.timezone();
+        this.readme = IpInfoEntity.readme();
+    }
+
+    public String getId() {
+        return id;
     }
 
     public String getAccessDate() {
@@ -118,19 +122,20 @@ public class IpInfo {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        IpInfo ipInfo = (IpInfo) o;
-        return accessDate.equals(ipInfo.accessDate) && ip.equals(ipInfo.ip) && city.equals(ipInfo.city) && region.equals(ipInfo.region) && country.equals(ipInfo.country) && loc.equals(ipInfo.loc) && org.equals(ipInfo.org) && postal.equals(ipInfo.postal) && timezone.equals(ipInfo.timezone) && readme.equals(ipInfo.readme);
+        IpInfoDatabaseDTO that = (IpInfoDatabaseDTO) o;
+        return id.equals(that.id) && accessDate.equals(that.accessDate) && ip.equals(that.ip) && city.equals(that.city) && region.equals(that.region) && country.equals(that.country) && loc.equals(that.loc) && org.equals(that.org) && postal.equals(that.postal) && timezone.equals(that.timezone) && readme.equals(that.readme);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(accessDate, ip, city, region, country, loc, org, postal, timezone, readme);
+        return Objects.hash(id, accessDate, ip, city, region, country, loc, org, postal, timezone, readme);
     }
 
     @Override
     public String toString() {
-        return "IpInfo{" +
-                "accessDate='" + accessDate + '\'' +
+        return "IpInfoDatabaseDTO{" +
+                "id='" + id + '\'' +
+                ", accessDate='" + accessDate + '\'' +
                 ", ip='" + ip + '\'' +
                 ", city='" + city + '\'' +
                 ", region='" + region + '\'' +

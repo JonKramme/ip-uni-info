@@ -1,17 +1,12 @@
 package dev.JonKramme.ipuniinfo.controller;
 
-import com.sun.net.httpserver.HttpContext;
-import dev.JonKramme.ipuniinfo.model.IpInfo;
-import dev.JonKramme.ipuniinfo.repository.IpInfoRepository;
+import dev.JonKramme.ipuniinfo.model.IpInfoDTO;
 import dev.JonKramme.ipuniinfo.service.IpInfoService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequestMapping("/ipcheck")
@@ -25,8 +20,8 @@ public class IpInfoController {
     }
 
     @GetMapping("/{ipv4Address}")
-    public ResponseEntity<IpInfo> requestIpInfo(@PathVariable String ipv4Address) {
-        IpInfo ipInfoEntity;
+    public ResponseEntity<IpInfoDTO> requestIpInfo(@PathVariable String ipv4Address) {
+        IpInfoDTO ipInfoEntity;
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         try {

@@ -1,7 +1,8 @@
 package dev.JonKramme.ipuniinfo.service;
 
 import com.google.common.net.InetAddresses;
-import dev.JonKramme.ipuniinfo.model.IpInfo;
+import dev.JonKramme.ipuniinfo.model.IpInfoDTO;
+import dev.JonKramme.ipuniinfo.model.IpInfoDatabaseDTO;
 import dev.JonKramme.ipuniinfo.repository.IpInfoRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -15,25 +16,28 @@ public class IpInfoService {
         this.repository = repository;
     }
 
-    private IpInfo saveIpInfo(IpInfo entity){
-        return repository.save(entity);
+    private IpInfoDatabaseDTO saveIpInfo(IpInfoDTO ipInfoEntity) {
+        IpInfoDatabaseDTO ipInfoDatabaseEntity = repository.save(new IpInfoDatabaseDTO(ipInfoEntity));
+        return ipInfoDatabaseEntity;
     }
-
 
     private boolean validate(String ipv4Address) {
         // IPv4 Validation using Guava
         return InetAddresses.isInetAddress(ipv4Address);
     }
-    public IpInfo request(String ipv4Address) {
+
+    public IpInfoDTO request(String ipv4Address) {
         if (!validate(ipv4Address)) {
             throw new IllegalArgumentException("Invalid IPv4 Address");
-        } else {
-            String url = "https://ipinfo.io/" + ipv4Address + "/geo";
-            RestTemplate restTemplate = new RestTemplate();
-
-            IpInfo entity = restTemplate.getForObject(url, IpInfo.class);
-            saveIpInfo(entity);
-            return entity;
         }
+
+        String url = "https://ipinfo.io/" + ipv4Address + "/geo";
+
+        RestTemplate restTemplate = new RestTemplate();
+        IpInfoDTO IpInfoEntity = restTemplate.getForObject(url, IpInfoDTO.class);
+
+        saveIpInfo(IpInfoEntity);
+
+        return IpInfoEntity;
     }
 }
