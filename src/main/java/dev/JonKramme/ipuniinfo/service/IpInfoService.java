@@ -32,9 +32,7 @@ public class IpInfoService {
             RestTemplate restTemplate = new RestTemplate();
 
             IpInfo entity = restTemplate.getForObject(url, IpInfo.class);
-            //TODO: DB Audit Insert
             saveIpInfo(entity);
-            //TODO: return Data;
             return entity;
         }
     }

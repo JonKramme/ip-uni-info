@@ -4,18 +4,15 @@ package dev.JonKramme.ipuniinfo.model;
 
 
 
-import javax.persistence.*;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.MongoId;
+
 import java.util.Objects;
 import java.time.LocalDateTime;
-
-@Entity
-@Table(name="tbl_IpInfoLog")
+@Document("ipInfo")
 public class IpInfo {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
-    //@Temporal(TemporalType.TIMESTAMP) //Only needed for Date or Calender
-    LocalDateTime accessDate;
+    String accessDate;
     String ip;
     String city;
     String region;
@@ -27,12 +24,11 @@ public class IpInfo {
     String readme;
 
     public IpInfo() {
-        this.accessDate = LocalDateTime.now();
+        this.accessDate = LocalDateTime.now().toString();
     }
 
-    public IpInfo(Long id, String ip, String city, String region, String country, String loc, String org, String postal, String timezone, String readme) {
-        this.id = id;
-        this.accessDate = LocalDateTime.now();
+    public IpInfo( String ip, String city, String region, String country, String loc, String org, String postal, String timezone, String readme) {
+        super();
         this.ip = ip;
         this.city = city;
         this.region = region;
@@ -44,12 +40,8 @@ public class IpInfo {
         this.readme = readme;
     }
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public String getAccessDate() {
+        return accessDate;
     }
 
     public String getIp() {
@@ -125,9 +117,22 @@ public class IpInfo {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        IpInfo ipInfo = (IpInfo) o;
+        return accessDate.equals(ipInfo.accessDate) && ip.equals(ipInfo.ip) && city.equals(ipInfo.city) && region.equals(ipInfo.region) && country.equals(ipInfo.country) && loc.equals(ipInfo.loc) && org.equals(ipInfo.org) && postal.equals(ipInfo.postal) && timezone.equals(ipInfo.timezone) && readme.equals(ipInfo.readme);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(accessDate, ip, city, region, country, loc, org, postal, timezone, readme);
+    }
+
+    @Override
     public String toString() {
         return "IpInfo{" +
-                "id=" + id +
+                "accessDate='" + accessDate + '\'' +
                 ", ip='" + ip + '\'' +
                 ", city='" + city + '\'' +
                 ", region='" + region + '\'' +
@@ -138,18 +143,5 @@ public class IpInfo {
                 ", timezone='" + timezone + '\'' +
                 ", readme='" + readme + '\'' +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        IpInfo ipInfo = (IpInfo) o;
-        return id.equals(ipInfo.id) && ip.equals(ipInfo.ip) && city.equals(ipInfo.city) && region.equals(ipInfo.region) && country.equals(ipInfo.country) && loc.equals(ipInfo.loc) && org.equals(ipInfo.org) && postal.equals(ipInfo.postal) && timezone.equals(ipInfo.timezone) && readme.equals(ipInfo.readme);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, ip, city, region, country, loc, org, postal, timezone, readme);
     }
 }
