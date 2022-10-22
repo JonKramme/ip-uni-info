@@ -14,7 +14,6 @@ import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletRequest;
 
 @RestController
-@ResponseBody
 @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
 public class IpInfoController {
 
@@ -26,7 +25,6 @@ public class IpInfoController {
     }
 
     @RequestMapping("/ipcheck/{ipv4Address}")
-    @ResponseBody
     public ResponseEntity<IpInfo> requestIpInfo(@PathVariable String ipv4Address) {
         IpInfo ipInfoEntity = null;
         HttpHeaders headers = new HttpHeaders();
