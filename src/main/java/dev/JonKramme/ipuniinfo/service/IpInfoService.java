@@ -16,9 +16,8 @@ public class IpInfoService {
         this.repository = repository;
     }
 
-    private IpInfoDatabaseDTO saveIpInfo(IpInfoDTO ipInfoEntity) {
-        IpInfoDatabaseDTO ipInfoDatabaseEntity = repository.save(new IpInfoDatabaseDTO(ipInfoEntity));
-        return ipInfoDatabaseEntity;
+    private IpInfoDatabaseDTO saveIpInfo(IpInfoDTO entity) throws Exception{
+        return repository.save(new IpInfoDatabaseDTO(entity));
     }
 
     private boolean validate(String ipv4Address) {
@@ -26,7 +25,7 @@ public class IpInfoService {
         return InetAddresses.isInetAddress(ipv4Address);
     }
 
-    public IpInfoDTO request(String ipv4Address) {
+    public IpInfoDTO request(String ipv4Address) throws Exception  {
         if (!validate(ipv4Address)) {
             throw new IllegalArgumentException("Invalid IPv4 Address");
         }
