@@ -1,38 +1,50 @@
 package dev.JonKramme.ipuniinfo;
 
-import org.bson.Document;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 // Tests https://www.baeldung.com/spring-data-mongodb-connection
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class IpUniInfoApplicationTests {
-	/*@Test
 
+	@Autowired
+	TestRestTemplate restTemplate;
+	@Test
+	public void DbConnectionTest() {
+	//TODO: Write more Tests - Generate Documentation using Spring REST Docs- Containerize as Docker -
+	}
+	@Test
+	void request_from_invalid_binding_1() {
+		ResponseEntity<String> entity = restTemplate.getForEntity("/",String.class);
 
-	public void givenConnectionUri_whenAlsoIncludingIndividualParameters_thenInvalidConfig() {
-		System.setProperty(
-				"spring.data.mongodb.uri",
-				"mongodb://" + USER + ":" + PASS + "@" + HOST + ":" + PORT + "/" + DB
-		);
+		assertNotNull(entity);
+		assertEquals(entity.getStatusCode(), HttpStatus.NOT_FOUND);
+		assertEquals(MediaType.APPLICATION_JSON,entity.getHeaders().getContentType());
+	}
+	@Test
+	void request_from_invalid_binding_2() {
+		ResponseEntity<String> entity = restTemplate.getForEntity("/ipcheck/80.80.80.80/3425",String.class);
 
-		SpringApplicationBuilder app = new SpringApplicationBuilder(IpUniInfoApplication.class)
-				.properties(
-						"spring.data.mongodb.host=" + HOST,
-						"spring.data.mongodb.port=" + PORT,
-						"spring.data.mongodb.username=" + USER,
-						"spring.data.mongodb.password=" + PASS
-				);
+		assertNotNull(entity);
+		assertEquals(entity.getStatusCode(), HttpStatus.NOT_FOUND);
+		assertEquals(MediaType.APPLICATION_JSON,entity.getHeaders().getContentType());
+	}
+	@Test
+	void request_from_invalid_binding_3() {
+		ResponseEntity<String> entity = restTemplate.getForEntity("/unicheck/Latvia/extra",String.class);
 
-		BeanCreationException e = assertThrows(BeanCreationException.class, () -> {
-			app.run();
-		});
+		assertNotNull(entity);
+		assertEquals(entity.getStatusCode(), HttpStatus.NOT_FOUND);
+		assertEquals(MediaType.APPLICATION_JSON,entity.getHeaders().getContentType());
 	}
 
-	 */
+
 }
