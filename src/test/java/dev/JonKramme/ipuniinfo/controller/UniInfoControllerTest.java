@@ -1,60 +1,77 @@
 package dev.JonKramme.ipuniinfo.controller;
 
-import dev.JonKramme.ipuniinfo.model.IpInfoDTO;
-import dev.JonKramme.ipuniinfo.model.UniInfoDTO;
-import org.junit.jupiter.api.MethodOrderer;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestMethodOrder;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.web.client.RestClientException;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.RestDocumentationExtension;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Arrays;
-import java.util.Objects;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class UniInfoControllerTest {
+    private MockMvc mockMvc;
 
-    @Autowired
-    TestRestTemplate restTemplate;
+    @BeforeEach
+    public void setUp(WebApplicationContext webApplicationContext, RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(document("{method-name}",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint())))
+                .build();
+    }
 
     @Test
     @Order(1)
-    void request_UniInfo_with_valid_country() {
+    void request_UniInfo_with_valid_country() throws Exception {
         String country = "Latvia";
-        ResponseEntity<UniInfoDTO[]> entity = restTemplate.getForEntity("/unicheck/"+country,UniInfoDTO[].class);
-
-        assertEquals(entity.getStatusCode(), HttpStatus.OK);
-        assertEquals(MediaType.APPLICATION_JSON,entity.getHeaders().getContentType());
+        this.mockMvc.perform(get("/unicheck/{country}", country))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(document("UniInfo-with-valid-country",
+                        pathParameters(
+                                parameterWithName("country").description("The name of a country to request a list of universities from.")
+                        )));
     }
 
     @Test
     @Order(2)
-    void request_UniInfo_with_valid_country_with_spacing() {
+    void request_UniInfo_with_valid_country_with_spacing() throws Exception {
         String country = "United States";
-        ResponseEntity<UniInfoDTO[]> entity = restTemplate.getForEntity("/unicheck/"+country,UniInfoDTO[].class);
-
-        assertEquals(entity.getStatusCode(), HttpStatus.OK);
-        assertEquals(MediaType.APPLICATION_JSON,entity.getHeaders().getContentType());
+        this.mockMvc.perform(get("/unicheck/{country}", country))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andDo(document("UniInfo-with-valid-country-spacing",
+                        pathParameters(
+                                parameterWithName("country").description("The name of a country to request a list of universities from.")
+                        )));
     }
 
     @Test
     @Order(3)
-    void request_UniInfo_with_invalid_country() {
+    void request_UniInfo_with_invalid_country() throws Exception {
         String country = "@@@4536M&$%$§&MfDE";
-        ResponseEntity<UniInfoDTO[]> entity = restTemplate.getForEntity("/unicheck/"+country,UniInfoDTO[].class);
-
-        assertNotNull(entity);
-        assertEquals(entity.getStatusCode(), HttpStatus.OK);
-        assertEquals(MediaType.APPLICATION_JSON,entity.getHeaders().getContentType());
-        assertEquals(0, Objects.requireNonNull(entity.getBody()).length);
+        this.mockMvc.perform(get("/unicheck/{country}", country))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json"))
+                .andExpect(content().json("[]"))
+                .andDo(document("UniInfo-with-invalid-country",
+                        pathParameters(
+                                parameterWithName("country").description("The name of a country to request a list of universities from.")
+                        )));
     }
 }
