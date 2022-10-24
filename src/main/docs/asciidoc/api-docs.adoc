@@ -1,0 +1,6 @@
+operation::UniInfo-with-valid-country[snippets='path-parameters,http-request,http-response']
+operation::UniInfo-with-valid-country-spacing[snippets='path-parameters,http-request,http-response']
+operation::UniInfo-with-invalid-country[snippets='path-parameters,http-request,http-response']
+operation::IpInfo-with-valid-ip[snippets='path-parameters,http-request,http-response']
+operation::IpInfo-with-invalid-ip[snippets='path-parameters,http-request,http-response']
+operation::IpInfo-with-invalid-ip-leading-zeros[snippets='path-parameters,http-request,http-response']
