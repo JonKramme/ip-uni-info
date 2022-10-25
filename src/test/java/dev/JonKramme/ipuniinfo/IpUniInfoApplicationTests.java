@@ -1,5 +1,6 @@
 package dev.JonKramme.ipuniinfo;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,11 @@ class IpUniInfoApplicationTests {
                 .build();
     }
 
-
+    // TODO:
+    // handle MongoSocketOpenException
+    // use H2 for Integration tests?
+    void check_db_connection() {
+    }
     @Test
     void request_from_invalid_binding_1() {
         ResponseEntity<String> entity = restTemplate.getForEntity("/", String.class);
